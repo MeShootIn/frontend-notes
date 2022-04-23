@@ -102,13 +102,12 @@ function TypeScriptTypes() {
  * Type Assertion - явное приведение типов.
  */
 function TypeAssertion() {
-  // Современный вариант
   const UnknownString: unknown = 'str';
-  const len = (UnknownString as string).length;
 
+  // Современный вариант
+  const len = (UnknownString as string).length;
   // Старый стиль => не юзать
-  const UnknownString2: unknown = 'str';
-  const len2 = (<string>UnknownString2).length;
+  const len2 = (<string>UnknownString).length;
 }
 
 /**
