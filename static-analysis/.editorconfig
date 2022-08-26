@@ -1,3 +1,5 @@
+# EditorConfig Specification: https://editorconfig-specification.readthedocs.io
+
 # Файлы EditorConfig читаются сверху вниз, и самые последние найденные правила
 # имеют приоритет. Свойства из соответствующих разделов EditorConfig применяются
 # в том порядке, в котором они были прочитаны, поэтому свойства в более близких
