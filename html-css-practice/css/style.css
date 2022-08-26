@@ -10,10 +10,6 @@ ul li {
   font: 100% Helvetica, sans-serif;
 }
 
-.message_error, .message_warning, .message_info {
-  color: black;
-}
-
 .message_info {
   display: inline;
   border: 1px solid black;
@@ -31,6 +27,10 @@ ul li {
   border: 1px solid yellow;
   padding: 5px;
   background: rgba(255, 0, 0, 0.5);
+}
+
+.message_info, .message_warning, .message_error {
+  color: black;
 }
 
 article[role=main] {
