@@ -1,0 +1,40 @@
+a {
+  color: red;
+}
+
+.title {
+  color: DarkBlue;
+}
+
+ul li {
+  font: 100% Helvetica, sans-serif;
+}
+
+.message_error, .message_warning, .message_info {
+  color: black;
+}
+
+.message_info {
+  display: inline;
+  border: 1px solid black;
+  padding: 5px;
+  background: rgba(0, 0, 255, 0.5);
+}
+.message_warning {
+  display: inline;
+  border: 1px solid blue;
+  padding: 5px;
+  background: rgba(255, 255, 0, 0.5);
+}
+.message_error {
+  display: inline;
+  border: 1px solid yellow;
+  padding: 5px;
+  background: rgba(255, 0, 0, 0.5);
+}
+
+article[role=main] {
+  width: 62.5%;
+}
+
+/*# sourceMappingURL=style.css.map */

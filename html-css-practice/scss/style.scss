@@ -1,0 +1,83 @@
+// ФРАГМЕНТЫ И МОДУЛИ
+
+// Директива "@use" работает только с Dart Sass (более быстрый и новый), для
+// остальных юзать "@import".
+// Каждый "@import" файла в CSS делает дополнительный HTTP-запрос, а Sass
+// собирает всё в 1 файл.
+@use "sass:math";
+@use "font";
+
+// Из пространства имён "font".
+a {
+  color: font.$a-color;
+}
+
+
+// ПЕРЕМЕННЫЕ
+
+// Принято писать в kebab-case.
+$title-color: DarkBlue;
+
+.title {
+  color: $title-color;
+}
+
+
+// ВЛОЖЕННОСТЬ
+
+ul {
+  li {
+    font: 100% font.$font-stack;
+  }
+}
+
+
+// РАСШИРЕНИЯ
+
+// Не отобразится в выходном CSS-файле, потому что нигде не юзается.
+%extension_that_will_never_be_extended {
+  z-index: 123456;
+}
+
+// Отобразится, потому что юзается (в миксине "message").
+%bold-black-font {
+  color: black;
+}
+
+
+// МИКСИНЫ (ПРИМЕСИ)
+
+@mixin message($message-color: blue, $border-color: black) {
+  display: inline;
+  border: 1px solid $border-color;
+  padding: 5px;
+  background: rgba($message-color, 0.5);
+
+  @extend %bold-black-font;
+}
+
+.message {
+  // "&" - конкатенация текущей строки с родительской => ".message_info".
+  &_info {
+    // Если без аргументов, то скобки можно опустить.
+    @include message;
+  }
+
+  &_warning {
+    @include message(yellow, blue);
+  }
+
+  &_error {
+    // Именованные аргументы (можно менять порядок).
+    @include message($border-color: yellow, $message-color: red);
+  }
+}
+
+
+// ОПЕРАТОРЫ
+
+// Sass содержит несколько математических операторов (например, +, -, *,
+// math.div(), и %). Необходимо подключить модуль "sass:math".
+article[role="main"] {
+  width: math.div(600px, 960px) * 100%;
+}
