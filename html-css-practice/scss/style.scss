@@ -4,6 +4,9 @@
 // остальных юзать "@import".
 // Каждый "@import" файла в CSS делает дополнительный HTTP-запрос, а Sass
 // собирает всё в 1 файл.
+// NOTE Если в папке есть файл "index.scss" (обычно являющийся главным), то
+// можно просто прописать название папки ('@use "some_dir/common"' вместо '@use
+// "some_dir/common/index"').
 @use "sass:math";
 @use "font";
 
@@ -34,22 +37,27 @@ ul {
 
 // МИКСИНЫ (ПРИМЕСИ)
 
-// В отличие от расширений, генерируются ВСЕ и по отдельности (даже при
-// отсутствии аргументов), потому что в языке они все зашиты как динамические.
-// В идеале лучше не писать в миксине статические поля, а выносить их в
-// расширения (для экономии размера выходного файла).
+// В отличие от расширений, ГЕНЕРИРУЮТСЯ ВСЕ и по отдельности (даже при
+// отсутствии аргументов), потому что в языке они зашиты как динамические.
+// Лучше не писать в миксине статичный поля, а выносить их в расширения (для
+// экономии размера выходного файла).
+
+%message {
+  display: inline;
+  padding: 5px;
+}
 
 @mixin message($message-color: blue, $border-color: black) {
-  display: inline;
   border: 1px solid $border-color;
-  padding: 5px;
   background: rgba($message-color, 0.5);
 
+  @extend %message;
   @extend %bold-black-font;
 }
 
 .message {
-  // "&" - конкатенация текущей строки с родительской => ".message_info".
+  // "&" - конкатенация текущей строки с родительской (НЕ ТОЛЬКО с классом) =>
+  // ".message_info".
   &_info {
     // Если без аргументов, то скобки можно опустить.
     @include message;
@@ -68,25 +76,174 @@ ul {
 
 // РАСШИРЕНИЯ
 
-// Расширение (extend'ы) - статический блок. В выходном файле применяется ко
+// Расширение (extend) - статичный блок. В выходном файле применяется ко
 // всем затронутым селекторам, перечисленным через запятую => меньше кода =>
 // меньше размер файла.
-
-// Отобразится, потому что юзается в миксине "message".
-%bold-black-font {
-  color: black;
-}
 
 // Не отобразится в выходном CSS-файле, потому что нигде не юзается.
 %extension_that_will_never_be_extended {
   z-index: 123456;
 }
 
+// Отобразится, потому что юзается в миксине "message".
+%bold-black-font {
+  font-weight: bold;
+  color: black;
+}
 
-// ОПЕРАТОРЫ
+
+// МАТЕМАТИЧЕСКИЕ ОПЕРАТОРЫ
 
 // Sass содержит несколько математических операторов (например, +, -, *,
-// math.div(), и %). Необходимо подключить модуль "sass:math".
+// math.div(), и %). Для некоторых необходимо подключить модуль "sass:math".
 article[role="main"] {
   width: math.div(600px, 960px) * 100%;
+}
+
+
+// TODO https://youtu.be/ZEUFnIwnj38?list=PL66qhubfOwjbRlOaIe1OEg_FhNP81cJ9G
+// КОМПОНЕНТЫ И ФАЙЛОВАЯ СТРУКТУРА
+
+// корень
+//     - scss
+//         - common
+//             - fonts.scss
+//             - reset.scss
+//             - ...
+//         - components
+//             - header
+//             - main
+//             - footer
+//             - ...
+//         - article.scss (не на всех страницах содержится)
+//         - index.scss
+
+
+// TODO https://youtu.be/9uaENbRyVT4?list=PL66qhubfOwjbRlOaIe1OEg_FhNP81cJ9G
+// РАБОТА С БРЕЙПОИНТАМИ
+
+
+// ИНТЕРПОЛЯЦИЯ
+
+// Даёт возможность встраивать SCSS-выражения во фрагменты SCSS-кода. Юзается
+// почти везде.
+
+$breakpoint-mobile: 'sm';
+$margin-side: 'top';
+
+.logo-#{$breakpoint-mobile} {
+  background-image: url("image/logo/#{$breakpoint-mobile}.jpg");
+  margin-#{$margin-side}: 10px;
+}
+
+// Иногда полезно для CSS-переменных.
+:root {
+  --breakpoint-mobile: #{$breakpoint-mobile};
+}
+
+
+// УСЛОВИЯ
+
+$theme-mode: 'dark';
+
+@if ($theme-mode == 'light') {
+  body {
+    background-color: white;
+  }
+} @else if ($theme-mode == 'dark-light') {
+  body {
+    background-color: lightgray;
+  }
+} @else {
+  body {
+    background-color: darkgray;
+  }
+}
+
+
+// СТРУКТУРЫ ДАННЫХ
+
+// Список - набор значений через запятую. Обычно, юзается для перебора через
+// циклы.
+$colors: red, green, blue;
+
+// Map - пары видов: ключ-значения / ключ-значение.
+// Имя и нескольких значений:
+$fonts: (
+        'regular' 400 red,
+        medium 500 green,
+        "bold" 700 blue,
+);
+// Явное указание одного значения (ПЛОХОЙ ТОН):
+$breakpoints: (
+        sm: 576px,
+        md: 768px,
+        lg: 992px,
+        xl: 1200px,
+        xxl: 1400px,
+);
+// Получение значения:
+.header-lg {
+  max-width: map-get($breakpoints, 'lg');
+}
+
+
+// ЦИКЛЫ
+
+// @each перебирает итерируемые объекты.
+
+// По списку.
+@each $color in $colors {
+  .#{$color} {
+    color: $color;
+  }
+}
+
+// По мапе.
+@each $name, $weight, $color in $fonts {
+  .font-#{$name} {
+    font-weight: $weight;
+    color: $color;
+  }
+}
+
+// По интервалу значений.
+// [1, 6]
+@for $i from 1 through 6 {
+  .h#{$i} {
+    font-weight: #{(7 - $i) * 100};
+  }
+}
+
+
+// ФУНКЦИИ
+
+// Как миксины, только могут содержать лишь языковые конструкции (циклы, списки,
+// ...) и возвращают значения.
+
+@function pow($x, $n) {
+  $result: 1;
+
+  @for $i from 1 through $n {
+    $result: $result * $x;
+  }
+
+  @return $result;
+}
+
+@function sum($numbers...) {
+  $sum: 0;
+
+  @each $number in $numbers {
+    $sum: $sum + $number;
+  }
+
+  @return $sum;
+}
+
+.sm-plus-md {
+  width: sum(
+                  map-get($breakpoints, 'sm'),
+                  map-get($breakpoints, 'md'),
+  );
 }
