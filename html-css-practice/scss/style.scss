@@ -10,6 +10,9 @@
 @use "sass:math";
 @use "font";
 
+// Импортирует все файлы в текущей директории в АЛФАВИТНОМ порядке
+// @use "*";
+
 // Из пространства имён "font".
 a {
   color: font.$a-color;
@@ -101,7 +104,7 @@ article[role="main"] {
 }
 
 
-// TODO https://youtu.be/ZEUFnIwnj38?list=PL66qhubfOwjbRlOaIe1OEg_FhNP81cJ9G
+// FIXME https://youtu.be/ZEUFnIwnj38?list=PL66qhubfOwjbRlOaIe1OEg_FhNP81cJ9G
 // КОМПОНЕНТЫ И ФАЙЛОВАЯ СТРУКТУРА
 
 // корень
@@ -110,11 +113,13 @@ article[role="main"] {
 //             - fonts.scss
 //             - reset.scss
 //             - ...
+//             - index.scss
 //         - components
 //             - header
 //             - main
 //             - footer
 //             - ...
+//             - index.scss
 //         - article.scss (не на всех страницах содержится)
 //         - index.scss
 
