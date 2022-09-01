@@ -27,6 +27,9 @@ ul li {
   border: 1px solid yellow;
   background: rgba(255, 0, 0, 0.5);
 }
+.message .message__inner {
+  background-color: black;
+}
 
 .message_info, .message_warning, .message_error {
   font-weight: bold;

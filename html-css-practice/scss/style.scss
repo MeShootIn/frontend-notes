@@ -7,8 +7,15 @@
 // NOTE Если в папке есть файл "index.scss" (обычно являющийся главным), то
 // можно просто прописать название папки ('@use "some_dir/common"' вместо '@use
 // "some_dir/common/index"').
-@use "sass:math";
+@use "sass:math" as mth;
 @use "font";
+// "@forward" позволяет экспортировать модуль в другой файл. Все переменные
+// будут начинаться с префикса "font-".
+@forward "font" as font-*;
+// Экспортирует всё, кроме "$a-color".
+@forward "font" hide $a-color;
+// Экспортирует только "$a-color".
+@forward "font" show $a-color;
 
 // Импортирует все файлы в текущей директории в АЛФАВИТНОМ порядке
 // @use "*";
@@ -23,6 +30,8 @@ a {
 
 // Принято писать в kebab-case.
 $title-color: DarkBlue;
+// Приватная переменная начинается с "-".
+$-private-var: red;
 
 .title {
   color: $title-color;
@@ -74,6 +83,12 @@ ul {
     // Именованные аргументы (можно менять порядок).
     @include message($border-color: yellow, $message-color: red);
   }
+
+  // => CSS: .message .message__inner {...}
+  // Лучше юзать для элементов
+  #{&}__inner {
+    background-color: black;
+  }
 }
 
 
@@ -100,7 +115,7 @@ ul {
 // Sass содержит несколько математических операторов (например, +, -, *,
 // math.div(), и %). Для некоторых необходимо подключить модуль "sass:math".
 article[role="main"] {
-  width: math.div(600px, 960px) * 100%;
+  width: mth.div(600px, 960px) * 100%;
 }
 
 
