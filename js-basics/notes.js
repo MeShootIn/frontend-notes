@@ -51,7 +51,7 @@ log(bar); // BAZ
  * * String ( 'some string' )
  * * BigInt ( 1924924124n )
  * * Symbol ( Symbol() )
- * * Null (null)
+ * * Null ( null )
  * */
 typeof undefined === 'undefined';
 typeof true === 'boolean';
@@ -90,7 +90,8 @@ log( (new Boolean(false)) ? 'истина' : 'увы' );
 /* ЗАЩИЩЁННЫЙ КОНСТРУКТОР */
 /*
  * Паттерн убирает разницу между вызовом конструктора с new и без.
- * Большинство встроенных объектов можно вызывать без new (кроме дат).
+ * Большинство конструкторов встроенных объектов можно (плохой тон) спокойно без
+ * new (кроме Date).
  * */
 typeof Date(); // 'string' (строковое представление текущей даты)
 typeof new Date(); // 'object'
@@ -98,7 +99,7 @@ typeof new Date(); // 'object'
 /* UNDEFINED */
 /*
  * Значение undefined автоматически присваивается переменным, которые были
- * объявлены без присвоения или аргументам функции, для которых не были переданы
+ * объявлены без присвоения, или аргументам функции, для которых не были переданы
  * значения.
  * */
 if (typeof neverDeclared === 'undefined') { } // OK
@@ -177,7 +178,7 @@ Math.abs(sum - 0.3) < Number.EPSYLON; // true
  * * нельзя оперировать с Number, но можно сравнивать;
  * * нельзя юзать с Math и многими другими встроенными функциями/объектами.
  * */
-42n === 42;
+42n !== 42;
 // 1 + 1n; // TypeError
 5n / 2n === 2n;
 
@@ -185,7 +186,7 @@ Math.abs(sum - 0.3) < Number.EPSYLON; // true
 /*
  * Уникальный и неизменяемый тип данных, который обычно используется как
  * идентификатор для свойств объектов для предотвращения коллизий имён и
- * затирания. Добавлен в ES2015.
+ * затирания. Добавлен в ES6.
  *
  * Особенности:
  * * не перечисляется в for..in;
@@ -240,7 +241,7 @@ const regExp = new RegExp('/^.{10,}/g'); // Длина не менее 10
  * * приоритет: [1, 20]
  * */
 // TODO https://youtu.be/6j-Rroa_dq0?list=PLp8YG0BfOLkzPrWNOewRWgS1rwmTSLf5M&t=4070
-// Правая ассоциативность
+// Правая ассоциативность для оператора "="
 let x = 1;
 let y = x *= 5;
 log(x); // 5
@@ -333,8 +334,8 @@ adventurer.someNonExistentMethod?.() === undefined;
  * Выражение в switch(expr) вычисляется только 1 раз.
  * */
 
-// Fall through: текущий case без break сразу же перейдёт к следующему без
-// проверки на равенство case.
+// Fall through: текущий case без break сразу же перейдёт к следующему БЕЗ
+// ПРОВЕРКИ на соответствие case.
 log();
 const second = 'second';
 
@@ -369,24 +370,39 @@ switch (second) {
   }
 }
 
-/* ФУНКЦИИ */
+/* ФУНКЦИИ И ОБЛАСТЬ ВИДИМОСТИ */
 /*
  * Если функция ничего не вернула явно, то возвращается undefined.
  * Непереданным параметрам присваивается undefined.
+ * До ES6 (когда был только var) область видимости создавалась через function,
+ * т.о. юзался паттерн IIFE.
+ * Замыкание - комбинация функции и её области видимости.
+ *
+ * Есть Динамическая (где функция вызвана (НЕ РАБОТАЕТ В JS)) и Лексическая (где
+ * функция объявлена (работает в JS)) области видимости.
  * */
 
+// Паттерн IIFE (Immediately Invoked Function Expression)
+(function () {
+  var value = 123;
+})();
+// log(value); // ReferenceError: value in not define
+
 // Можно вызывать до объявления (хойстинг)
-function simpleFunction() {}
-// Нельзя вызывать до присвоения
-const functionExpresson = function () {};
-// Нельзя вызывать до присвоения + запоминает this
-const arrowFunction = () => {};
+function simpleFunction() {
+}
+// Нельзя вызывать до объявления
+const functionExpresson = function () {
+};
+// Нельзя вызывать до объявления + запоминает this
+const arrowFunction = () => {
+};
 // Плохой тон + есть неприятные особенности
 const functionConstructor = new Function('a', 'b', 'return a + b');
 
 const outer = 'global';
 
-// Функция в момент объявления захватывает текущий контекст (в т.ч. outer)
+// Функция в момент ОБЪЯВЛЕНИЯ захватывает текущий контекст (в т.ч. outer)
 function getOuter() {
   return outer;
 }
@@ -394,8 +410,45 @@ function getOuter() {
 function printOuter() {
   const outer = 'inner';
 
-  log( getOuter() );
+  log(getOuter());
 }
 
 log();
 printOuter(); // global
+
+// Паттерн Module
+var dbModule = (function (credits) {
+  var privateValue = 'https://www.elephantsql.com';
+
+  function privateMethod() {
+  }
+
+  function publicMethod() {
+  }
+
+  return {
+    run: publicMethod,
+  };
+})({login: 'admin', password: 'qwerty123'});
+dbModule.run();
+
+/* КОНТЕКСТ */
+/*
+ * TODO https://youtu.be/tAgVINdc_o0?list=PLlv4KV8fRplzgUppnnh9FsrQtXSnFaasL&t=2267
+ * */
+
+/* ПОИСК В DOM */
+/*
+ * Если не переобъявлена локально, то есть глобальная переменная с именем,
+ * указанным в id:
+ * ... <div id="elem"> ...
+ * elem - ссылка на элемент с id="elem": elem.style.background = 'red';
+ *
+ * Метод elem.matches(selector) проверяет, удовлетворяет ли элемент селектору.
+ *
+ * Метод elem.closest(selector) ищет ближайшего предка, соответствующего
+ * селектору. Сам elem также включается в поиск.
+ *
+ * Метод elemA.contains(elemB) вернёт true, если elemB находится внутри elemA
+ * (elemB потомок elemA) или когда elemA == elemB.
+ * */
