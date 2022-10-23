@@ -68,7 +68,7 @@ ul {
 }
 
 .message {
-  // "&" - конкатенация текущей строки с родительской (НЕ ТОЛЬКО с классом) =>
+  // "&" - конкатенация родительской строки с текущей (НЕ ТОЛЬКО с классом) =>
   // ".message_info".
   &_info {
     // Если без аргументов, то скобки можно опустить.
@@ -122,21 +122,36 @@ article[role="main"] {
 // FIXME https://youtu.be/ZEUFnIwnj38?list=PL66qhubfOwjbRlOaIe1OEg_FhNP81cJ9G
 // КОМПОНЕНТЫ И ФАЙЛОВАЯ СТРУКТУРА
 
-// корень
+// - styles
+//     - css
+//         - index.css
+//         - article.css
+//         - ...
 //     - scss
-//         - common
-//             - fonts.scss
-//             - reset.scss
+//         - common (в порядке forward'ов, кроме _index.scss)
+//             - _fonts.scss
+//             - _reset.scss
+//             - _variables.scss
+//             - _extends.scss
 //             - ...
-//             - index.scss
+//             - _common.scss
+//             - _index.scss
 //         - components
 //             - header
 //             - main
 //             - footer
 //             - ...
-//             - index.scss
-//         - article.scss (не на всех страницах содержится)
-//         - index.scss
+//         - index.scss (для index.html)
+//         - article.scss (для article.html)
+//         - ...
+
+// Общие селекторы (из "common/common.scss") НЕ ВКЛАДЫВАТЬ в необщие. Например,
+// нельзя:
+.my-header {
+  .container {
+    // ...
+  }
+}
 
 
 // TODO https://youtu.be/9uaENbRyVT4?list=PL66qhubfOwjbRlOaIe1OEg_FhNP81cJ9G
@@ -189,17 +204,17 @@ $colors: red, green, blue;
 // Map - пары видов: ключ-значения / ключ-значение.
 // Имя и нескольких значений:
 $fonts: (
-        'regular' 400 red,
-        medium 500 green,
-        "bold" 700 blue,
+'regular' 400 red,
+medium 500 green,
+"bold" 700 blue,
 );
 // Явное указание одного значения (ПЛОХОЙ ТОН):
 $breakpoints: (
-        sm: 576px,
-        md: 768px,
-        lg: 992px,
-        xl: 1200px,
-        xxl: 1400px,
+sm: 576px,
+md: 768px,
+lg: 992px,
+xl: 1200px,
+xxl: 1400px,
 );
 // Получение значения:
 .header-lg {
@@ -262,7 +277,7 @@ $breakpoints: (
 
 .sm-plus-md {
   width: sum(
-                  map-get($breakpoints, 'sm'),
-                  map-get($breakpoints, 'md'),
+  map-get($breakpoints, 'sm'),
+  map-get($breakpoints, 'md'),
   );
 }
