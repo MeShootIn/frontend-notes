@@ -60,11 +60,11 @@ ul {
 }
 
 @mixin message($message-color: blue, $border-color: black) {
-  border: 1px solid $border-color;
-  background: rgba($message-color, 0.5);
-
   @extend %message;
   @extend %bold-black-font;
+
+  border: 1px solid $border-color;
+  background: rgba($message-color, 0.5);
 }
 
 .message {
