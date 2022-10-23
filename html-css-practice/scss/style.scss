@@ -1,3 +1,14 @@
+// КОММЕНТАРИИ
+
+// Есть 3 вида:
+// * Однострочные ("//") - не компилятся в CSS ("молчаливые" комментарии),
+// потому что их там нет;
+// * Многострочные ("/* */") - компилятся (но для компиляции в "сжатом" режиме
+// надо "/*! */") => поддерживают интерполяцию;
+// * Документационные ("///") - не компилятся, но их читает SassDoc
+// (поддерживает все необходимые аннотаций).
+
+
 // ФРАГМЕНТЫ И МОДУЛИ
 
 // Директива "@use" работает только с Dart Sass (более быстрый и новый), для
@@ -32,6 +43,8 @@ a {
 $title-color: DarkBlue;
 // Приватная переменная начинается с "-".
 $-private-var: red;
+// Поддерживается безымянная переменная:
+$_
 
 .title {
   color: $title-color;
@@ -255,11 +268,18 @@ xxl: 1400px,
 // Как миксины, только могут содержать лишь языковые конструкции (циклы, списки,
 // ...) и возвращают значения.
 
-@function pow($x, $n) {
+/// Computes an exponent.
+///
+/// @param {number} $base
+///   The number to multiply by itself.
+/// @param {integer (unitless)} $exponent
+///   The number of `$base`s to multiply together.
+/// @return {number} `$base` to the power of `$exponent`.
+@function pow($base, $exponent) {
   $result: 1;
 
-  @for $i from 1 through $n {
-    $result: $result * $x;
+  @for $_ from 1 through $exponent {
+    $result: $result * $base;
   }
 
   @return $result;
