@@ -161,3 +161,46 @@ padding уменьшит размер содержимого внутри эле
 Корневой элемент - html (по умолч. 16px).
 * vw/vh (viewport ...) - % относительно экрана
 */
+
+
+
+/* Сокращённые свойства */
+/*
+ * Лучше писать полные свойства, т.к. читабельно, не надо запоминать порядок и
+ * не будет затирания.
+ * */
+
+/* Примеры */
+.example {
+  width: 800px;
+  height: 209px;
+}
+
+/* Сокращённое свойство затирает полное (нет картинки, но будет красный фон без
+ * повторений) */
+/* <div class="example full-omitted shorthand"></div> */
+.full-omitted {
+  background-image: url(
+    'https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png'
+  );
+}
+
+.shorthand {
+  background: red no-repeat;
+}
+
+/* Затирания нет, т.к. сначала сокращённое свойство идёт после полного, но всё
+ * равно плохой топ */
+/* <div class="example shorthand full-omitted"></div> */
+.full {
+  background-image: url(
+    'https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png'
+  );
+}
+
+/* Хороший тон */
+/* <div class="example full full-other"></div> */
+.full-other {
+  background-color: red;
+  background-repeat: no-repeat;
+}
