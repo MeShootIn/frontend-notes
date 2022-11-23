@@ -111,7 +111,8 @@ https://cssgridgarden.com/
 
 :root {
   --global-link-color: red;
-  --default-card-margin: 10px;
+  --default-card-margin-units: 10;
+  --default-card-margin-px: calc(var(--default-card-margin-units) * 1px);
 }
 
 .link {
@@ -119,16 +120,16 @@ https://cssgridgarden.com/
 }
 
 .card {
-  margin: var(--default-card-margin);
+  margin: var(--default-card-margin-px);
 }
 
 .container {
   /* Доступна только внутри класса и его дочерних элементов */
-  --container-card-margin: calc(var(--default-card-margin) * 2);
+  --container-card-margin-px: calc(var(--default-card-margin-px) * 2);
 }
 
 .container .card {
-  margin: var(--container-card-margin);
+  margin: calc(var(--container-card-margin-px) + var(--default-card-margin-px));
 }
 
 
