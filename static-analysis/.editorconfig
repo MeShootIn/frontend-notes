@@ -1,35 +1,56 @@
-# EditorConfig Specification: https://editorconfig-specification.readthedocs.io
+; ОБЩЕЕ
+;
+; INFO https://editorconfig-specification.readthedocs.io
+;
+; Файлы EditorConfig читаются сверху вниз, и самые последние найденные правила
+; имеют приоритет. Свойства из соответствующих разделов EditorConfig применяются
+; в том порядке, в котором они были прочитаны, поэтому свойства в более близких
+; файлах имеют приоритет.
+;
+; Не все свойства поддерживаются каждым плагином. Если свойство не указано,
+; будут использоваться настройки редактора.
+;
+; ТОЛЬКО `/` - разделитель пути, `;` и `#` - для комментов.
+; TODO https://editorconfig.org/#wildcards
 
-# Файлы EditorConfig читаются сверху вниз, и самые последние найденные правила
-# имеют приоритет. Свойства из соответствующих разделов EditorConfig применяются
-# в том порядке, в котором они были прочитаны, поэтому свойства в более близких
-# файлах имеют приоритет.
-#
-# Не все свойства поддерживаются каждым плагином.
-# Если свойство не указано, будут использоваться настройки редактора.
-#
-# ТОЛЬКО "/" - разделитель пути, "#" и ";" - для комментов.
-# TODO https://editorconfig.org/#wildcards
 
 
-# Останавливает процесс поиска файла ".editorconfig" на текущем. Должно идти
-# ПЕРЕД всеми свойствами.
+; СВОЙСТВА
+;
+; TODO https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
+
+
+; НЕКОНФИГУРИРУЕМЫЕ PRETTIER'ОМ СВОЙСТВА
+
+; Останавливает процесс поиска файла ".editorconfig" на текущем. Должно идти
+; ПЕРЕД всеми свойствами.
 root = true
 
 [*]
-# Удаление свойства (и использование свойства РЕДАКТОРА по умолчанию).
+; Удаление свойства (и использование свойства РЕДАКТОРА по умолчанию).
 tab_width = unset
-# Вид табуляции: "tab" (hard tabs) или "space" (soft tabs).
-indent_style = space
-# Целое число пробелов для табуляции или "tab" (тогда юзается "tab_width", но
-# это ПЛОХОЙ ТОН).
-indent_size = 2
-# Целое число пробелов в качестве символа Tab. Не нужно указывать, если не
-# отличается от "indent_size".
-tab_width = 2
-# "lf", "cr", или "crlf".
-end_of_line = lf
-# "latin1", "utf-8", "utf-8-bom", "utf-16be" или "utf-16le".
+; `latin1`, `utf-8`, `utf-8-bom`, `utf-16be` или `utf-16le`.
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
+
+
+; КОНФИГУРИРУЕМЫЕ PRETTIER'ОМ СВОЙСТВА
+;
+; Prettier парсит свойства EditorConfig и конвертит в свои соответствующие . Но
+; Prettier'ские файл конфигурации, опции и т.п. могут переопределять свойства
+; EditorConfig.
+
+; `lf`, `cr`, или `crlf`. Prettier: "endOfLine".
+end_of_line = lf
+; Вид табуляции: `tab` (hard tabs) или `space` (soft tabs). Prettier: "useTabs".
+indent_style = space
+; Целое число пробелов в качестве символа табуляции. Не нужно указывать, если не
+; отличается от `indent_size`. Prettier: "tabWidth".
+tab_width = 2
+; Целое число пробелов для табуляции или `tab` (тогда юзается `tab_width`, но
+; это ПЛОХОЙ ТОН). Prettier: "tabWidth".
+indent_size = 2
+; Целое число (принудительный hard wrap) или `off` (свойства редактора).
+; Prettier: "printWidth".
+max_line_length = 80
