@@ -1,6 +1,5 @@
 const { log } = require('./helpers');
 
-
 function debug(SomeClass) {
   log(SomeClass);
 
@@ -18,11 +17,11 @@ function debug(SomeClass) {
 
 const Dima = {
   greet: function () {
-    console.log('hello')
+    console.log('hello');
   },
   name: 'Dima',
   age: 23,
-}
+};
 
 // class A { };
 // debug(A);

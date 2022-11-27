@@ -1,3 +1,5 @@
-const log = (...args) => { console.log(...args); }
+const log = (...args) => {
+  console.log(...args);
+};
 
-module.exports = {log};
+module.exports = { log };

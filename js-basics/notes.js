@@ -1,7 +1,76 @@
 const { log } = require('./helpers');
 
+/* CHROME DEV TOOLS */
+/*
+ * История выбранных элементов.
+ * $0 (самый недавно кликнутый элемент во вкладке "Elements"), ..., $4 (самый
+ * последний). Как очередь, но в обратном порядке.
+ *
+ * Последнее вычисленное значение (если его не переприсвоить) - $_.
+ * > [1, 2, 3] => (3) [1, 2, 3]
+ * > $_.length => 3
+ * > $_ => 3
+ * > 2 + 3 => 5
+ * > $_ => 5
+ *
+ * Выбор по селектору.
+ * Почти как $ у jQuery, но возвращает DOM-элемент, а не jQuery-объект. Но если
+ * на сайте подключен jQuery, то он будет в приоритете.
+ * $('css-selector') <=> document.querySelector('css-selector')
+ * $$('css-selector') <=> document.querySelectorAll('css-selector')
+ *
+ * XPath-выражения. Выборки, мощнее чем с CSS-селекторами.
+ * $x('//h2[@id = "Guides"]')
+ *
+ * Перейти во вкладку "Elements" с переданным элементом.
+ * inspect(someElement)
+ *
+ * Список обработчиков событий на элементе.
+ * getEventListeners(someElement)
+ * */
 
-// TODO Chrome Dev Tools
+/* CONSOLE API */
+
+// Свойства и методы DOM-элемента.
+console.dir(domElement);
+
+// Раскрывающаяся/скрывающаяся группа строк.
+console.group('group name');
+console.groupEnd();
+
+// Стектрейс с начала до вызова данного метода.
+console.trace();
+
+// Отображение массива данных в таблице.
+console.table([
+  {
+    name: 'admin',
+    age: 21,
+  },
+  {
+    name: 'user',
+    age: 22,
+  },
+]);
+
+// Ошибка (без завершения программы).
+console.error('An error occurred!');
+
+// Таймер в миллисекундах.
+console.time('main');
+// "main" first part
+console.time('inner');
+// "inner" part
+console.timeEnd('inner');
+// "main" second part
+console.timeEnd('main');
+
+// Проверка на выполняемость (без завершения программы).
+console.assert(1 === 2, '1 !== 2'); // => "Assertion failed: It is false!"
+
+// Очистка консоли.
+console.clear();
+
 /* ПЕРЕМЕННЫЕ И ТИПИЗАЦИЯ */
 /*
  * JS - слабо типизированный язык:
@@ -66,7 +135,7 @@ typeof null === 'object'; // Т.к. Object.prototype.__proto__ === null
  * Функция (Function) - особый, вызываемый объект. Сделан, чтобы понять, что
  * данный объект можно вызывать:
  * */
-typeof ( () => {} ) === 'function';
+typeof (() => {}) === 'function';
 /*
  * Для экземпляров встроенных объектов (обёрток) Array, Function, RegExp, Date,
  * Error, String, Number, Boolean и др. typeof вернет 'object'.
@@ -75,9 +144,9 @@ typeof ( () => {} ) === 'function';
  * */
 // => если класс отнаследован от какого-либо, то его экземпляры являются
 // наследниками последнего =>
-log( [] instanceof Array && [] instanceof Object ); // true, т. к. Object -
+log([] instanceof Array && [] instanceof Object); // true, т. к. Object -
 // прототип Array, т. к. [].__proto__.__proto__.constructor.name === 'Object'
-log( [].constructor.name === [].__proto__.constructor.name ); // true
+log([].constructor.name === [].__proto__.constructor.name); // true
 
 /* ОБЁРТКИ НАД ПРИМИТИВАМИ */
 /*
@@ -85,7 +154,7 @@ log( [].constructor.name === [].__proto__.constructor.name ); // true
  * примитивами.
  * Обёртка без new - это функция для преобразования типа.
  * */
-log( (new Boolean(false)) ? 'истина' : 'увы' );
+log(new Boolean(false) ? 'истина' : 'увы');
 
 /* ЗАЩИЩЁННЫЙ КОНСТРУКТОР */
 /*
@@ -99,10 +168,11 @@ typeof new Date(); // 'object'
 /* UNDEFINED */
 /*
  * Значение undefined автоматически присваивается переменным, которые были
- * объявлены без присвоения, или аргументам функции, для которых не были переданы
- * значения.
+ * объявлены без присвоения, или аргументам функции, для которых не были
+ * переданы значения.
  * */
-if (typeof neverDeclared === 'undefined') { } // OK
+if (typeof neverDeclared === 'undefined') {
+} // OK
 // if (neverDeclared === undefined) { } // ReferenceError
 
 /* NULL */
@@ -139,7 +209,7 @@ log(str);
 ― Увезем их туда, где ситхам не учуять их
 присутствие.
 ― Разделить их следует.
-`
+`;
 
 /* NUMBER */
 /*
@@ -151,8 +221,8 @@ log(str);
  * Infinity - любое число ЗА ПРЕДЕЛАМИ 64-битного диапазона => при / 0 нет
  * ошибки.
  * */
-log( 5 / Infinity ); // 0
-log( -5 / Infinity ); // -0 (из-за следования стандарту IEEE 754)
+log(5 / Infinity); // 0
+log(-5 / Infinity); // -0 (из-за следования стандарту IEEE 754)
 typeof NaN; // number
 NaN == NaN; // false
 Number.isNaN(Infinity % 5); // true
@@ -203,8 +273,8 @@ Math.abs(sum - 0.3) < Number.EPSYLON; // true
  * (присваивая новым элементам undefined).
  * */
 const literals = [1, 2, 3]; // Рекомендуемый способ
-const multipleArgs = new Array(1, 2, 3); // => [1, 2, 3] (нерекомендуемый способ)
-const byLength = new Array(2); // [undefined, undefined] (нерекомендуемый способ)
+const multipleArgs = new Array(1, 2, 3); // => [1, 2, 3] (нерекомендуется)
+const byLength = new Array(2); // [undefined, undefined] (нерекомендуется)
 
 /* РЕГУЛЯРНЫЕ ВЫРАЖЕНИЯ */
 /*
@@ -243,7 +313,7 @@ const regExp = new RegExp('/^.{10,}/g'); // Длина не менее 10
 // TODO https://youtu.be/6j-Rroa_dq0?list=PLp8YG0BfOLkzPrWNOewRWgS1rwmTSLf5M&t=4070
 // Правая ассоциативность для оператора "="
 let x = 1;
-let y = x *= 5;
+let y = (x *= 5);
 log(x); // 5
 log(y); // 5
 
@@ -389,14 +459,11 @@ switch (second) {
 // log(value); // ReferenceError: value in not define
 
 // Можно вызывать до объявления (хойстинг)
-function simpleFunction() {
-}
+function simpleFunction() {}
 // Нельзя вызывать до объявления
-const functionExpresson = function () {
-};
+const functionExpresson = function () {};
 // Нельзя вызывать до объявления + запоминает this
-const arrowFunction = () => {
-};
+const arrowFunction = () => {};
 // Плохой тон + есть неприятные особенности
 const functionConstructor = new Function('a', 'b', 'return a + b');
 
@@ -420,16 +487,14 @@ printOuter(); // global
 var dbModule = (function (credits) {
   var privateValue = 'https://www.elephantsql.com';
 
-  function privateMethod() {
-  }
+  function privateMethod() {}
 
-  function publicMethod() {
-  }
+  function publicMethod() {}
 
   return {
     run: publicMethod,
   };
-})({login: 'admin', password: 'qwerty123'});
+})({ login: 'admin', password: 'qwerty123' });
 dbModule.run();
 
 /* КОНТЕКСТ */
