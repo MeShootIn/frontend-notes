@@ -5,8 +5,6 @@
 3) Встроенный (inline css): <p style="...">
 */
 
-
-
 /* Селекторы */
 
 /* Общий вид:
@@ -38,7 +36,8 @@ p {
 }
 
 /* Селектор по атрибуту */
-a[href="https://google.com"] {
+a[href="https://google.com"]
+{
   font-weight: bold;
 }
 
@@ -74,8 +73,6 @@ ul li::marker {
   border: none !important;
 }
 
-
-
 /* Каскадность, наследование, специфичность */
 
 /*
@@ -100,8 +97,6 @@ https://youtu.be/R32L3i0Pfoo?list=PLp8YG0BfOLkzxfUfwl952DeYTRUpPISvm&t=4866
 4) Наличие селектора элемента или псевдо-элемента
 */
 
-
-
 /* Сброс CSS */
 
 /*
@@ -122,8 +117,6 @@ https://marksheet.io/css/reset.css
 Есть ещё normalize (приводит к единому отображению), но он может подкинуть
 ненужные стили.
 */
-
-
 
 /* Блочная и строчная модели */
 
@@ -165,8 +158,6 @@ padding уменьшит размер содержимого внутри эле
 * vw/vh (viewport ...) - % относительно экрана
 */
 
-
-
 /* Сокращённые свойства */
 /*
  * Лучше писать полные свойства, т.к. читабельно, не надо запоминать порядок и
@@ -174,36 +165,35 @@ padding уменьшит размер содержимого внутри эле
  * */
 
 /* Примеры */
-.example {
+.rectangle {
   width: 800px;
   height: 209px;
-}
-
-/* Сокращённое свойство затирает полное (нет картинки, но будет красный фон без
- * повторений) */
-/* <div class="example full-omitted shorthand"></div> */
-.full-omitted {
-  background-image: url(
-    'https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png'
-  );
 }
 
 .shorthand {
   background: red no-repeat;
 }
 
-/* Затирания нет, т.к. сначала сокращённое свойство идёт после полного, но всё
- * равно плохой топ */
-/* <div class="example shorthand full-omitted"></div> */
-.full {
-  background-image: url(
-    'https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png'
-  );
+.full-omitted {
+  background-image: url('https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png');
 }
 
-/* Хороший тон */
-/* <div class="example full full-other"></div> */
+/* Сокращённое свойство затирает полное (нет картинки, но будет красный фон без
+ * повторений) */
+/* <div class="rectangle full-omitted shorthand"></div> */
+
+/* Затирания нет, т.к. сокращённое свойство идёт перед полным, но всё равно
+* плохой топ */
+/* <div class="rectangle shorthand full-omitted"></div> */
+
+.full {
+  background-image: url('https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png');
+}
+
 .full-other {
   background-color: red;
   background-repeat: no-repeat;
 }
+
+/* Хороший тон */
+/* <div class="rectangle full full-other"></div> */
