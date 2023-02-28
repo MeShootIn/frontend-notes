@@ -12,7 +12,18 @@
       >JavaScript отключён или не поддерживается Вашим браузером!</noscript
     >
 
-    <script src="./src/components/MyDate.js" type="module"></script>
+    <script src="./index.js" type="module"></script>
+
     <my-date id="my-date" unix-time="1677527307252"></my-date>
+    <br />
+    <button is="my-button" type="button">Нажми</button>
+
+    <template id="my-template">
+      <script>
+        console.log('Шаблон ожил!');
+      </script>
+
+      <p>Шаблонный текст</p>
+    </template>
   </body>
 </html>
