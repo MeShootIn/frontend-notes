@@ -4,6 +4,16 @@
  * 2) Модифицированные - расширения существующих элементов.
  * */
 
+const template = document.createElement('template');
+template.innerHTML = `
+<span><slot name="date-word">Date</slot>:</span>
+<time datetime="1970-01-01">01-01-1970</time>
+<span>(UTC+<slot name="utc">0</slot>)</span>
+<div>
+  <slot>Additional information...</slot>
+</div>
+`;
+
 class MyDate extends HTMLElement {
   static unix_time = 'unix-time';
 
@@ -14,6 +24,10 @@ class MyDate extends HTMLElement {
     super();
     this.rendered = false;
     this.attachShadow({ mode: 'open' }); // => ShadowRoot
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    this.shadowRoot.firstElementChild.addEventListener('slotchange', (e) => {
+      console.log(`slotchange: "${e.target.name}"`);
+    });
   }
 
   render() {
@@ -26,10 +40,10 @@ class MyDate extends HTMLElement {
       date.getFullYear(),
     ];
     const datetime = `${year}-${month}-${day}`;
+    const datetimeText = `${day}.${month}.${year}`;
 
-    this.shadowRoot.innerHTML = `<time datetime="${datetime}">
-      ${datetime}
-    </time>`;
+    this.shadowRoot.querySelector('time').setAttribute('datetime', datetime);
+    this.shadowRoot.querySelector('time').innerText = datetimeText;
   }
 
   // Добавление элемента в документ (может вызываться много раз, если элемент
@@ -79,7 +93,7 @@ customElements.define(elementName, MyDate);
 
 // Инфа о кастомных элементах:
 customElements.get(elementName); // CustomElementConstructor (class MyDate
-// extends HTMLTimeElement {...}) | undefined
+// extends HTMLElement {...}) | undefined
 customElements
   .whenDefined(elementName)
   .then((elementConstructor) => elementConstructor);
@@ -114,6 +128,9 @@ customElements
  * HTMLElement => this), либо один из некоторых тегов (например, <article>,
  * <aside>, <p>), но не, например, <img>.
  *
+ * shadowRoot не может иметь обработчиков событий, поэтому навешивается
+ * firstElementChild свойство!
+ *
  * Значения mode (уровень инкапсуляции):
  * 1) 'open': доступ через elem.shadowRoot (ShadowRoot | null), который может
  * получить любой код;
@@ -139,3 +156,25 @@ const div = document.createElement('div');
 // Клонируем содержимое шаблона (content: DocumentFragment).
 div.append(document.querySelector('#my-template').content.cloneNode(true));
 document.body.appendChild(div);
+
+/*
+ * СЛОТЫ SHADOW DOM
+ *
+ * <sometag slot="some-name">...</sometag> попадает в <slot name="some-name">...
+ * </slot>
+ * <slot></slot> - слот по умолчанию (первый в Shadow DOM без name), куда
+ * вставляется (по очереди) всё содержимое, находящееся внутри <my-date> в HTML.
+ * Атрибут slot="..." могут иметь только дети 1-го уровня <my-date> в HTML.
+ * В template внутри <slot[ name ="..."]></slot> может располагаться значение по
+ * умолчанию.
+ * Браузер наблюдает за слотами и обновляет отображение при добавлении/удалении
+ * (но не редактировании!) элементов в слотах (событие "slotchange").
+ * INFO Более подробно API слотов + отслеживание редактирования:
+ * https://learn.javascript.ru/slots-composition#api-slotov
+ * */
+
+/*
+ * СТИЛИ SHADOW DOM
+ *
+ * <link rel="stylesheet" href="..."> лучше <style> из-за кеширования по HTTP.
+ * */

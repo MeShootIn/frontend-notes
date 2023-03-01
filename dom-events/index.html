@@ -14,7 +14,19 @@
 
     <script src="./index.js" type="module"></script>
 
-    <my-date id="my-date" unix-time="1677527307252"></my-date>
+    <my-date id="my-date" unix-time="1677527307252">
+      <span slot="date-word">Дата</span>
+      <span slot="utc">5</span>
+      <div>
+        <p>Города:</p>
+        <ul>
+          <li>Екатеринбург</li>
+          <li>Челябинск</li>
+          <li>Оренбург</li>
+        </ul>
+      </div>
+      <p>Календарь: григорианский</p>
+    </my-date>
     <br />
     <button is="my-button" type="button">Нажми</button>
 
