@@ -6,6 +6,18 @@
 
 const template = document.createElement('template');
 template.innerHTML = `
+<style>
+:host([centered]) {
+  position: fixed;
+  left: 50%;
+  right: 50%;
+  translate: transform(-25%, -25%);
+}
+
+::slotted([slot="utc"]) {
+  color: red;
+}
+</style>
 <span><slot name="date-word">Date</slot>:</span>
 <time datetime="1970-01-01">01-01-1970</time>
 <span>(UTC+<slot name="utc">0</slot>)</span>
@@ -161,14 +173,19 @@ document.body.appendChild(div);
  * СЛОТЫ SHADOW DOM
  *
  * <sometag slot="some-name">...</sometag> попадает в <slot name="some-name">...
- * </slot>
+ * </slot>.
+ *
  * <slot></slot> - слот по умолчанию (первый в Shadow DOM без name), куда
  * вставляется (по очереди) всё содержимое, находящееся внутри <my-date> в HTML.
+ *
  * Атрибут slot="..." могут иметь только дети 1-го уровня <my-date> в HTML.
+ *
  * В template внутри <slot[ name ="..."]></slot> может располагаться значение по
  * умолчанию.
+ *
  * Браузер наблюдает за слотами и обновляет отображение при добавлении/удалении
  * (но не редактировании!) элементов в слотах (событие "slotchange").
+ *
  * INFO Более подробно API слотов + отслеживание редактирования:
  * https://learn.javascript.ru/slots-composition#api-slotov
  * */
@@ -177,4 +194,21 @@ document.body.appendChild(div);
  * СТИЛИ SHADOW DOM
  *
  * <link rel="stylesheet" href="..."> лучше <style> из-за кеширования по HTTP.
+ *
+ * Селектор :host применяется к элементу, содержащему Shadow DOM (наш кастомный
+ * элемент <my-date>), но т.к. <my-date> находится в Light DOM, то внешние стили
+ * (my-date {...}) будут приоритетнее (если в локальных нет !important) =>
+ * локальные стили можно юзать как по умолчанию.
+ *
+ * Селектор :host(selector) применяется только в случае, если кастомный элемент
+ * подходит под селектор selector.
+ *
+ * Применение стилей к содержимому слотов: лучше всего через ::slotted(selector),
+ * если элемент, удовлетворяющий selector, - слотовый. ::slotted можно юзать
+ * только в CSS, но не, например, в querySelector.
+ *
+ * Кастомные свойства CSS существуют одновременно на всех уровнях, как Light,
+ * так и в Shadow DOM.
+ *
+ * TODO https://learn.javascript.ru/shadow-dom-style#itogo
  * */
