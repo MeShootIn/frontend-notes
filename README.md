@@ -5,7 +5,7 @@ Collection of my frontend notes. Each topic is in the corresponding branch:
 - [HTML and CSS basics][html-css-basics]
 - [HTML and CSS practice][html-css-practice]
 - [JavaScript basics][js-basics]
-- [JavaScript inheritance][js-basics]
+- [JavaScript inheritance][js-inheritance]
 - [TypeScript][typescript]
 - [Static code analysis][static-analysis]
 - [React basics][react-project]
